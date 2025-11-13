@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      background: linear-gradient(180deg, #0f0f0f, #1c1c1c);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* iPhone-like rounded frame */
+    .frame {
+      background: #000;
+      border-radius: 40px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      padding: 40px 20px;
+      text-align: center;
+      width: 320px;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    audio {
+      width: 90%;
+      outline: none;
+      filter: invert(1);
+    }
+
+    /* Home button in top-right */
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      text-decoration: none;
+      background: #222;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+    .home-btn:hover {
+      background: #444;
+    }
+
+    /* Subtle iPhone-style home indicator */
+    .indicator {
+      position: absolute;
+      bottom: 12px;
+      width: 100px;
+      height: 4px;
+      background: #333;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <a class="home-btn" href="index.html">Home</a>
+  
+  <div class="frame">
+    <h1>Now Playing</h1>
+    <audio controls autoplay>
+      <source src="song.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <div class="indicator"></div>
+</body>
+</html>
