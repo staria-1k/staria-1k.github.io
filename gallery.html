@@ -1,240 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery</title>
 
-  <style>
+<style>
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
-      background-image: url('background.gif');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: url("background.gif") center/cover no-repeat fixed;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 40px;
     }
 
-    /* Horizontal container */
-    .gallery-wrapper {
-      position: relative;
-      width: 100%;
-      height: 300px;
-      padding: 20px;
-      display: flex;
-      overflow-x: scroll;
-      overflow-y: hidden;
-      gap: 20px;
-
-      backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.12);
-      border-top: 1px solid rgba(255,255,255,0.25);
-      border-bottom: 1px solid rgba(255,255,255,0.25);
-
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none; /* Firefox */
+    h1 {
+        color: white;
+        backdrop-filter: blur(20px);
+        padding: 10px 25px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.15);
     }
-    .gallery-wrapper::-webkit-scrollbar {
-      display: none; /* Chrome */
+
+    /* ---- GRID ---- */
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 25px;
+        width: 90%;
+        max-width: 1400px;
     }
 
     .gallery-item {
-      min-width: 250px;
-      height: 100%;
-      flex-shrink: 0;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.35);
-      box-shadow: 0 5px 18px rgba(0,0,0,0.3);
-      cursor: pointer;
-
-      position: relative;
-      scroll-snap-align: center;
-      transition: transform 0.25s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        cursor: pointer;
     }
 
     .gallery-item:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 35px rgba(255,255,255,0.4);
+        transform: scale(1.03);
     }
 
     .gallery-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 0.4s ease, scale 0.3s ease;
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        display: block;
+        opacity: 0;
+        transition: opacity 0.6s ease;
     }
 
-    .gallery-item:hover img {
-      scale: 1.05;
-    }
-
+    /* Fade in once loaded */
     .loaded {
-      opacity: 1 !important;
+        opacity: 1 !important;
     }
 
-    /* Modal */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(10px);
-    }
-
-    .modal-img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 15px;
-      box-shadow: 0 0 40px rgba(255,255,255,0.4);
-      opacity: 0;
-      transform: scale(0.9);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-    }
-
-    .modal-img.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .close-btn {
-      position: fixed;
-      top: 20px;
-      right: 25px;
-      color: white;
-      font-size: 45px;
-      cursor: pointer;
-      text-shadow: 0 0 15px white;
-    }
-
+    /* ---- ARROWS ---- */
     .arrow {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 60px;
-      color: white;
-      cursor: pointer;
-      user-select: none;
-      text-shadow: 0 0 20px black;
-      padding: 20px;
-      transition: 0.2s ease;
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        color: white;
+        background: rgba(255,255,255,0.25);
+        backdrop-filter: blur(20px);
+        border-radius: 50%;
+        cursor: pointer;
+        user-select: none;
+        transition: 0.2s;
     }
 
     .arrow:hover {
-      transform: translateY(-50%) scale(1.15);
+        transform: translateY(-50%) scale(1.1);
     }
 
-    .arrow-left { left: 20px; }
-    .arrow-right { right: 20px; }
+    #leftArrow { left: 20px; }
+    #rightArrow { right: 20px; }
+</style>
 
-    .home-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255,255,255,0.35);
-      padding: 10px 15px;
-      border-radius: 15px;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-      transition: 0.3s ease;
-    }
-
-    .home-btn:hover {
-      transform: translateY(-3px);
-      background: rgba(255,255,255,0.3);
-    }
-  </style>
 </head>
-
 <body>
 
-<a href="index.html" class="home-btn">Home</a>
+<h1>Gallery</h1>
 
-<div class="gallery-wrapper">
-  <!-- Replace with your images -->
-  <div class="gallery-item"><img loading="lazy" src="img1.jpg"></div>
-  <div class="gallery-item"><img loading="lazy" src="img2.jpg"></div>
-  <div class="gallery-item"><img loading="lazy" src="img3.jpg"></div>
-  <div class="gallery-item"><img loading="lazy" src="img4.jpg"></div>
-  <div class="gallery-item"><img loading="lazy" src="img5.jpg"></div>
-  <div class="gallery-item"><img loading="lazy" src="img6.jpg"></div>
-</div>
+<!-- ARROWS -->
+<div id="leftArrow" class="arrow">❮</div>
+<div id="rightArrow" class="arrow">❯</div>
 
-<div class="modal" id="modal">
-  <span class="close-btn" onclick="closeModal()">×</span>
-  <span class="arrow arrow-left" onclick="prevImage()">‹</span>
-  <span class="arrow arrow-right" onclick="nextImage()">›</span>
-  <img id="modal-img" class="modal-img">
+<!-- GRID -->
+<div class="gallery-grid" id="gallery">
+    <!-- Example images – replace with your own -->
+    <div class="gallery-item"><img data-src="img1.jpg"></div>
+    <div class="gallery-item"><img data-src="img2.jpg"></div>
+    <div class="gallery-item"><img data-src="img3.jpg"></div>
+    <div class="gallery-item"><img data-src="img4.jpg"></div>
+    <div class="gallery-item"><img data-src="img5.jpg"></div>
+    <div class="gallery-item"><img data-src="img6.jpg"></div>
 </div>
 
 <script>
-  const images = Array.from(document.querySelectorAll(".gallery-item img"));
-  const modal = document.getElementById("modal");
-  const modalImg = document.getElementById("modal-img");
-  let currentIndex = 0;
+    /* ---- LAZY LOADING ---- */
+    const images = document.querySelectorAll("img[data-src]");
+    const config = { rootMargin: "200px 0px", threshold: 0.01 };
 
-  // Lazy load fade-in
-  images.forEach(img => {
-    img.addEventListener("load", () => img.classList.add("loaded"));
-  });
+    let observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const img = entry.target;
+            img.src = img.getAttribute("data-src");
+            img.onload = () => img.classList.add("loaded");
+            observer.unobserve(img);
+        });
+    }, config);
 
-  // Open modal on click
-  images.forEach((img, index) => {
-    img.addEventListener("click", () => {
-      currentIndex = index;
-      openModal();
-    });
-  });
+    images.forEach(img => observer.observe(img));
 
-  function openModal() {
-    modal.style.display = "flex";
-    modalImg.classList.remove("show");
-    modalImg.src = images[currentIndex].src;
+    /* ---- ARROW NAVIGATION (Scroll gallery horizontally) ---- */
+    const gallery = document.getElementById("gallery");
 
-    setTimeout(() => modalImg.classList.add("show"), 20);
-  }
+    document.getElementById("leftArrow").onclick = () => {
+        gallery.scrollBy({ left: -400, behavior: "smooth" });
+    };
 
-  function closeModal() {
-    modal.style.display = "none";
-    modalImg.classList.remove("show");
-  }
-
-  function nextImage() {
-    currentIndex = (currentIndex + 1) % images.length;
-    openModal();
-  }
-
-  function prevImage() {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    openModal();
-  }
-
-  // clicking background closes modal
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
-
-  // Keyboard controls
-  document.addEventListener("keydown", (e) => {
-    if (modal.style.display === "flex") {
-      if (e.key === "ArrowRight") nextImage();
-      if (e.key === "ArrowLeft") prevImage();
-      if (e.key === "Escape") closeModal();
-    }
-  });
+    document.getElementById("rightArrow").onclick = () => {
+        gallery.scrollBy({ left: 400, behavior: "smooth" });
+    };
 </script>
 
 </body>
