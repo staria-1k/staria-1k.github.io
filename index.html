@@ -18,8 +18,12 @@
     margin: 0;
     transition: opacity 0.5s ease-out;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
+    opacity: 0;
+    transition: opacity 0.45s ease;
   }
-
+  body.fade-in {
+      opacity: 1;
+  }
 
   .liquid-glass-btn {
     position: relative;
@@ -102,7 +106,30 @@
     transform: translateY(0);
     background: rgba(255, 255, 255, 0.22);
   }
+
+  .fade-out {
+    opacity: 0 !important;
+}
+
+
 </style>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add("fade-in");
+});
+
+document.addEventListener("click", function (e) {
+    const link = e.target.closest("a");
+
+    if (link && link.href && !link.target && !link.href.includes("#")) {
+        e.preventDefault();
+        document.body.classList.add("fade-out");
+        setTimeout(() => {
+            window.location = link.href;
+        }, 300); 
+    }
+});
+</script>
 </head>
 
 <body>
