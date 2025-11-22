@@ -52,6 +52,14 @@
         audio.play();
       }
     </script>
+    <script>
+      document.addEventListener('keydown', function(event) {
+      if ((event.ctrlKey || event.metaKey) && event.keyCode === 73) {
+        event.preventDefault();
+        console.log('who tf do you think you are.');
+    }
+  });
+</script>
   </head>
 <body>
   <a href="lobby.html" class="home-btn">Home</a>
