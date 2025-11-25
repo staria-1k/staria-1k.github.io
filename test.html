@@ -174,31 +174,31 @@ function animateBars() {
         for (let j = 0; j < samplesPerBar; j++) sum += frequencyData[start + j];
         let volume = sum / samplesPerBar;
 
-        let target = (volume / 255); * maxHeight;
         let maxHeight = 40;
+        
+        let target = (volume / 255) * maxHeight;
         let current = barHeights[i];
 
         let spring = 0.25;
         let friction = 0.12;
         let bounce = 0.3;
-
+        
         if (target > current) {
             velocities[i] += (target - current) * spring;
         } else {
             velocities[i] -= (current - target) * friction;
             velocities[i] += bounce;
         }
-
+        
         velocities[i] *= 0.82;
         current += velocities[i];
-
+        
         if (current < 0) current = 0;
-
+        
         barHeights[i] = current;
-
         bars[i].style.height = current + "px";
-    }
-}
+        
+        }
 
 document.querySelector(".image-btn").onclick = () => {
     if (!audioCtx) initAudio();
