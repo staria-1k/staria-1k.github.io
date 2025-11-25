@@ -182,8 +182,8 @@
   <body>
     <a href="/" class="home-btn">Home</a>
    <div class="top-left">
-      <button class="image-btn" onclick="togglePlay()">
-          <img src="unnamed (11).jpg" alt="Button">
+      <button class="image-btn" >
+          <img src="unnamed (11).jpg" alt="Button" onclick="togglePlay()">
       </button>
   
       <div class="waveform" id="waveform"></div>
@@ -201,6 +201,7 @@
           
         </ul>
   
+
     <script>
       const container = document.getElementById("waveform");
       const audio = document.getElementById("player");
