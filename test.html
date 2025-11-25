@@ -130,7 +130,7 @@ I do random experiments here-->
 const container = document.getElementById("waveform");
 const audio = document.getElementById("player");
 
-const barCount = 15;
+const barCount = 11;
 let bars = [];
 let barHeights = new Array(barCount).fill(0);
 let velocities = new Array(barCount).fill(0);
@@ -150,7 +150,7 @@ let frequencyData = null;
 function initAudio() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 256;
+    analyser.fftSize = 40;
 
     const src = audioCtx.createMediaElementSource(audio);
     src.connect(analyser);
