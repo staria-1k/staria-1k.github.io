@@ -82,7 +82,7 @@ I do random experiments here-->
 .waveform {
     display: flex;
     gap: 3px;
-    height: 40px;
+    height: 10px;
     align-items: flex-end;
     justify-content: center;
 }
@@ -150,7 +150,7 @@ let frequencyData = null;
 function initAudio() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 128;
+    analyser.fftSize = 256;
 
     const src = audioCtx.createMediaElementSource(audio);
     src.connect(analyser);
