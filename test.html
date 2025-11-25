@@ -82,7 +82,7 @@ I do random experiments here-->
 .waveform {
     display: flex;
     gap: 3px;
-    height: 10px;
+    height: 40px;
     align-items: flex-end;
     justify-content: center;
 }
@@ -174,7 +174,8 @@ function animateBars() {
         for (let j = 0; j < samplesPerBar; j++) sum += frequencyData[start + j];
         let volume = sum / samplesPerBar;
 
-        let target = volume;
+        let target = (volume / 255); * maxHeight;
+        let maxHeight = 40;
         let current = barHeights[i];
 
         let spring = 0.25;
