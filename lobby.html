@@ -1,31 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TianHong</title>
-  <link type="image/png" rel="shortcut icon" href="favicon.png" id="favicon"/>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TianHong</title>
+    <link type="image/png" rel="shortcut icon" href="favicon.png" id="favicon"/>
+    
+    <style>
       body {
         margin: 0;
         height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         background: url("background.gif") center/cover no-repeat;
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro", sans-serif;
-        opacity: 0;
-        transition: opacity 0.45s ease;
       }
-      body.fade-in {
-        opacity: 1;
+    
+      #audioControls {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
       }
-      p {
-        font-size: 1.1rem;
-        color: rgba(255,255,255,0.85);
-        margin-bottom: 30px;
+    
+      #songSelector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
+    
+      .arrow {
+        font-size: 12px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.35);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        cursor: pointer;
+        width: 20px;
+        height: 40px;
+        color: white;
+        transition: 0.25s ease;
+      }
+      .arrow:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+      }
+    
+    
+      .thumbButton {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid rgba(255,255,255,0.25);
+        box-shadow: 0 0 12px rgba(0,0,0,0.5);
+        transition: transform 0.15s ease, box-shadow 0.3s ease;
+      }
+      .thumbButton:active {
+        transform: scale(0.92);
+      }
+      .thumbButton.playing {
+        box-shadow: 0 0 18px rgba(255,255,255,0.6);
+      }
+    
+      /* --- WAVEFORM --- */
+      #waveform {
+        display: flex;
+        gap: 3px;
+        height: 42px;
+        align-items: flex-end;
+      }
+    
+      .bar {
+        width: 5px;
+        background: rgba(255,255,255,0.85);
+        border-radius: 10px;
+        transition: height 0.3s ease;
+      }
+      .bar.paused {
+        animation: fallBounce 0.4s ease-out forwards;
+      }
+    
+      @keyframes fallBounce {
+          0% { height: var(--current-height, 40px); }
+          70% { height: 0; }
+          100% { height: 0; }
+      }
+    
       .home-btn{
         position: absolute;
         top: 14px;
@@ -35,156 +97,28 @@
         border: 1px solid rgba(255, 255, 255, 0.4);
         background: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(20px) saturate(150%);
-        -webkit-backdrop-filter: blur(20px) saturate(150%);
         color: white;
         font-size: 1em;
-        cursor: pointer;
         text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: inset 0 0 1px rgba(255,255,255,0.5),
-                    0 8px 25px rgba(0,0,0,0.4);
-      }
-      .home-btn:hover{
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-2px);
-        box-shadow: 0 0 12px rgba(255,255,255,0.4),
-                    0 10px 30px rgba(0,0,0,0.6);
-      }
-      .home-btn:active{
-        transform: scale(0.97);
-      }
-      .welcome-message {
-        font-size: 1.7em;
-        font-weight: 600;
-        color: white;
-        margin-bottom: 25px;
-        text-shadow: 0 0 15px rgba(255,255,255,0.7);
-        backdrop-filter: blur(3px);
-        padding: 12px 24px;
-        border-radius: 14px;
-        background: rgba(0,0,0,0.3);
-        border: 1px solid rgba(255,255,255,0.2);
-      }
-
-      .button-container {
-        display: flex;
-        gap: 20px;
-      }
-      .top-left {
-          position: absolute;
-          top: 14px;
-          left: 14px;
-          display: flex;
-          align-items: center;
-          gap: 15px;
-      }
-      
-      .image-btn {
-          background: none;
-          border: none;
-          padding: 0;
-          cursor: pointer;
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          width: 42px;   
-          height: 42px;
-          border-radius: 20%;
-          overflow: hidden;
-          transition: all 0.3s ease;
-      }
-      
-      .image-btn img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-      }
-      .image-btn:hover{
-        background: rgba(255,255,255,0.25);
-        transform: translateY(-2px);
-        box-shadow: 0 0 12px rgba(255,255,255,0.4),
-                    0 10px 30px rgba(0,0,0,0.6);
-      }
-      .image-btn:active{
-        transform: scale(0.97);
-      }
-      
-      .waveform {
-          display: flex;
-          gap: 3px;
-          height: 42px;
-          align-items: flex-end;
-          justify-content: center;
-      }
-      
-      .bar {
-          width: 5px;
-          background: rgba(255,255,255,0.8);
-          border-radius: 10px;
-          transition: height 0.3s ease;
-      }
-      .bar.paused {
-        animation: fallBounce 0.4s ease-out forwards !important;
-      }
-      @keyframes fallBounce {
-          0% {
-              height: var(--current-height, 40px);
-          }
-          70% {
-              height: 0px;
-          }
-          100% {
-              height: 0px;
-          }
       }
     </style>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-          document.body.classList.add("fade-in");
-      });
-      
-      
-      document.addEventListener("click", function (e) {
-          const link = e.target.closest("a");
-      
-          if (link && link.href && !link.target && !link.href.includes("#")) {
-              e.preventDefault();
-              document.body.classList.add("fade-out");
-              setTimeout(() => {
-                  window.location = link.href;
-              }, 300); 
-          }
-      });
-       document.addEventListener('keydown', function(event) {
-            if ((event.ctrlKey || event.shiftKey) && event.key === "I") {
-              event.preventDefault();
-              console.log('who tf do you think you are.');
-              alert("You're quite curious arent you? (Imagine attempting to steal code :/ )");
-              
-            }
-            if ((event.ctrlKey || event.metaKey) && event.key === "U") {
-              event.preventDefault();
-              console.log('who tf do you think you are.');
-              alert("You're quite curious arent you? (Imagine attempting to steal code :/ )");
-            }
-            if (event.key === "F12") {
-              event.preventDefault();
-              console.log('who tf do you think you are');
-              alert("You're quite curious arent you? (Imagine attempting to steal code :/ )");
-            }
-      });
-    </script>
+    
   </head>
   <body>
-    <a href="/" class="home-btn">Home</a>
-   <div class="top-left">
-      <button class="image-btn" >
-          <img src="unnamed (11).jpg" alt="Button" onclick="togglePlay()">
-      </button>
   
-      <div class="waveform" id="waveform"></div>
-    </div>
+    <a href="/" class="home-btn">Home</a>
     
-    <audio id="player" src="ssVid.net--生分-男版.mp3"></audio>
-
+    
+    <div id="audioControls">
+      
+      <div id="songSelector">
+          <button id="prevSong" class="arrow">❮</button>
+          <img id="songThumb" class="thumbButton" onclick="togglePlayPause()">
+          <button id="nextSong" class="arrow">❯</button>
+      </div>
+    
+      <div id="waveform"></div>
+    </div>
     <div class="welcome-message">
       *✧･ﾟ:* Tian Hong (天紅) *✧･ﾟ:*
     </div>
@@ -200,20 +134,65 @@
         </ul>
     </div>
     <script>
-      const container = document.getElementById("waveform");
-      const audio = document.getElementById("player");
+    
+      const songs = [
+        {
+          src: "ssVid.net--Jumping-Machine-跳楼机.mp3",
+          img: "tiaolouji.jpg"
+        },
+        {
+          src: "ssVid.net--生分-男版.mp3",
+          img: "unnamed (11).jpg"
+        },
+        {
+          src: "ssVid.net--放纵想念.mp3",
+          img: "download (4).jpg"
+        }
+      ];
       
+      let currentSong = 0;
+      const audio = document.getElementById("player");
+      const thumb = document.getElementById("songThumb");
+      
+      /* Load  song */
+      function loadSong(i) {
+        currentSong = i;
+        audio.src = songs[i].src;
+        thumb.src = songs[i].img;
+      }
+      loadSong(0);
+      
+      /* Next / Prev */
+      document.getElementById("nextSong").onclick = () => {
+        currentSong = (currentSong + 1) % songs.length;
+        loadSong(currentSong);
+        audio.play();
+      };
+      document.getElementById("prevSong").onclick = () => {
+        currentSong = (currentSong - 1 + songs.length) % songs.length;
+        loadSong(currentSong);
+        audio.play();
+      };
+      
+      /* ---------------- PLAY / PAUSE ---------------- */
+      function togglePlayPause() {
+        if (!audioCtx) initAudio();
+        if (audio.paused) audio.play();
+        else audio.pause();
+      }
+      
+      /* ---------------- WAVEFORM ---------------- */
+      const waveform = document.getElementById("waveform");
       const barCount = 12;
       let bars = [];
-      let barHeights = new Array(barCount).fill(0);
-      let velocities = new Array(barCount).fill(0);
+      let barHeights = Array(barCount).fill(0);
+      let velocities = Array(barCount).fill(0);
       
       for (let i = 0; i < barCount; i++) {
-          let bar = document.createElement("div");
-          bar.classList.add("bar");
-          bar.style.height = "4px";
-          container.appendChild(bar);
-          bars.push(bar);
+        const b = document.createElement("div");
+        b.classList.add("bar");
+        waveform.appendChild(b);
+        bars.push(b);
       }
       
       let audioCtx = null;
@@ -221,80 +200,68 @@
       let frequencyData = null;
       
       function initAudio() {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          analyser = audioCtx.createAnalyser();
-          analyser.fftSize = 256;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
       
-          const src = audioCtx.createMediaElementSource(audio);
-          src.connect(analyser);
-          analyser.connect(audioCtx.destination);
+        const src = audioCtx.createMediaElementSource(audio);
+        src.connect(analyser);
+        analyser.connect(audioCtx.destination);
       
-          frequencyData = new Uint8Array(analyser.frequencyBinCount);
+        frequencyData = new Uint8Array(analyser.frequencyBinCount);
       }
       
       function animateBars() {
-          requestAnimationFrame(animateBars);
+        requestAnimationFrame(animateBars);
+        if (!analyser) return;
       
-          if (!analyser) return;
+        analyser.getByteFrequencyData(frequencyData);
       
-          analyser.getByteFrequencyData(frequencyData);
+        const chunk = Math.floor(frequencyData.length / barCount);
       
-          let samplesPerBar = Math.floor(frequencyData.length / barCount);
+        for (let i = 0; i < barCount; i++) {
+          let sum = 0;
+          for (let j = 0; j < chunk; j++) sum += frequencyData[i * chunk + j];
+          const volume = sum / chunk;
       
-          for (let i = 0; i < barCount; i++) {
-              let sum = 0;
-              let start = i * samplesPerBar;
-              for (let j = 0; j < samplesPerBar; j++) sum += frequencyData[start + j];
-              let volume = sum / samplesPerBar;
+          const maxHeight = 40;
+          const target = (volume / 255) * maxHeight;
+          let current = barHeights[i];
       
-              let maxHeight = 40;
-              let target = (volume / 255) * maxHeight;
-              let current = barHeights[i];
+          let spring = 0.25;
+          let friction = 0.12;
+          let bounce = 0.3;
       
-              let spring = 0.25;
-              let friction = 0.12;
-              let bounce = 0.3;
-      
-              if (target > current) {
-                  velocities[i] += (target - current) * spring;
-              } else {
-                  velocities[i] -= (current - target) * friction;
-                  velocities[i] += bounce;
-              }
-      
-              velocities[i] *= 0.82;
-              current += velocities[i];
-      
-              if (current < 0) current = 0;
-      
-              barHeights[i] = current;
-      
-              bars[i].style.height = current + "px";
+          if (target > current) velocities[i] += (target - current) * spring;
+          else {
+            velocities[i] -= (current - target) * friction;
+            velocities[i] += bounce;
           }
+      
+          velocities[i] *= 0.82;
+          current += velocities[i];
+      
+          if (current < 0) current = 0;
+      
+          barHeights[i] = current;
+          bars[i].style.height = current + "px";
+        }
       }
       
-      document.querySelector(".image-btn").onclick = () => {
-          if (!audioCtx) initAudio();
-      
-          if (audio.paused) {
-              audio.play();
-          } else {
-              audio.pause();
-          }
-      };
       
       audio.onplay = () => {
-          bars.forEach(b => b.classList.remove("paused"));
-          animateBars();
+        thumb.classList.add("playing");
+        bars.forEach(b => b.classList.remove("paused"));
+        animateBars();
       };
       
       audio.onpause = () => {
-          bars.forEach((bar, i) => {
-              bar.style.setProperty("--current-height", barHeights[i] + "px");
-              bar.classList.add("paused");
-          });
+        thumb.classList.remove("playing");
+        bars.forEach((bar, i) => {
+          bar.style.setProperty("--current-height", barHeights[i] + "px");
+          bar.classList.add("paused");
+        });
       };
     </script>
   </body>
 </html>
-
