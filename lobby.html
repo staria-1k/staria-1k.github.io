@@ -39,13 +39,22 @@
             border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .home-btn {
-            position: absolute;
-            top: 17px;
-            right: 17px;
-            font-size: 1em;
-            text-decoration: none;
-        }
+      .home-btn svg {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        fill: none;
+        stroke: white;
+        stroke-width: 2;
+        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        border-radius: 50%; 
+        box-shadow: 0 0 0px rgba(255, 255, 255, 0);
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .home-btn:hover svg {
+          transform: translateY(-2px);
+      }
 
         #audioControls {
             position: absolute;
